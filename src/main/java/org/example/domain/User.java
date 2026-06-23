@@ -12,7 +12,7 @@ public class User {
         Objects.requireNonNull(email, "email cannot be null");
         Objects.requireNonNull(displayName, "displayName cannot be null");
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        if (!(email.matches(emailRegex))){
+        if (!(email.matches(emailRegex))) {
             throw new IllegalArgumentException("Invalid email address: " + email);
         }
         if (emails.contains(email)) {
