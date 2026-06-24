@@ -1,4 +1,4 @@
-package org.example.domain;
+package org.example.domain.users;
 
 public class IndividualUser extends User {
 

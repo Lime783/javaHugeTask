@@ -1,4 +1,4 @@
-package org.example.domain;
+package org.example.domain.users;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -19,7 +19,7 @@ public class User {
         }
 
         this.email = email;
-        this.displayName = Objects.requireNonNull(displayName);
+        this.displayName = Objects.requireNonNull(displayName, "displayName cannot be null");
         emailsUnique.add(email);
     }
 
