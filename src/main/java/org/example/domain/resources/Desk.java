@@ -10,12 +10,17 @@ public class Desk extends Resource {
     DeskType deskType;
 
     public Desk(String name, Money customHourlyRate, DeskType deskType) {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(deskType, "deskType cannot be null");
         if (name.length() < 3 || name.length() > 100) {
             throw new IllegalArgumentException("Invalid desk name: " + name);
         }
-        this.name = Objects.requireNonNull(name, "Desk name cannot be null");
+        if (NAMES_UNIQUE.contains(name)) {
+            throw new IllegalArgumentException("Room name already exists: " + name);
+        }
+        this.name = name;
         this.customHourlyRate = customHourlyRate;
-        this.deskType = Objects.requireNonNull(deskType,  "Desk type cannot be null");
+        this.deskType = deskType;
     }
 
     public Desk(String name, DeskType deskType) {

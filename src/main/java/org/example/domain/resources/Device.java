@@ -16,9 +16,13 @@ public class Device extends Resource {
         if (quantity < 1) {
             throw new IllegalArgumentException("Invalid quantity: " + quantity);
         }
+        if (NAMES_UNIQUE.contains(name)) {
+            throw new IllegalArgumentException("Room name already exists: " + name);
+        }
         this.name = Objects.requireNonNull(name);
         this.customHourlyRate = customHourlyRate;
         this.quantity = quantity;
+        NAMES_UNIQUE.add(name);
     }
 
     public Device(String name, int quantity) {

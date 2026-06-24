@@ -21,31 +21,31 @@ public record Money(BigDecimal amount) {
         return new Money(new BigDecimal(amount).setScale(2, RoundingMode.HALF_UP));
     }
 
-    Money add(BigDecimal amountToAdd) {
+    Money add(Money amountToAdd) {
         Objects.requireNonNull(amountToAdd, "amountToAdd must not be null");
-        if (amountToAdd.compareTo(BigDecimal.ZERO) < 0) {
+        if (amountToAdd.amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("amount cannot be negative: " + amountToAdd);
         }
-        return new Money(amount.add(amountToAdd));
+        return new Money(amount.add(amountToAdd.amount));
     }
-    
-    Money subtract(BigDecimal amountToSubtract) {
+
+    Money subtract(Money amountToSubtract) {
         Objects.requireNonNull(amountToSubtract, "amountToSubtract must not be null");
-        if (amountToSubtract.compareTo(BigDecimal.ZERO) < 0) {
+        if (amountToSubtract.amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("amount cannot be negative: " + amountToSubtract);
         }
-        if (amount.subtract(amountToSubtract).compareTo(BigDecimal.ZERO) < 0) {
+        if (amount.subtract(amountToSubtract.amount).compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("amount to substract cannot be greater than current balance: " + amountToSubtract);
         }
-        return new Money(amount.subtract(amountToSubtract));
+        return new Money(amount.subtract(amountToSubtract.amount));
     }
-    
-    Money multiply(BigDecimal multiplier) {
+
+    Money multiply(Money multiplier) {
         Objects.requireNonNull(multiplier, "multiplier must not be null");
-        if (multiplier.compareTo(BigDecimal.ZERO) < 0) {
+        if (multiplier.amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("multiplier cannot be negative: " + multiplier);
         }
-        return new Money(amount.multiply(multiplier).setScale(2, RoundingMode.HALF_UP));
+        return new Money(amount.multiply(multiplier.amount).setScale(2, RoundingMode.HALF_UP));
     }
 
     int compareTo(Money moneyToCompare) {

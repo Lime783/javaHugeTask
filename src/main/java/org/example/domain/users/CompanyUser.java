@@ -10,13 +10,13 @@ public class CompanyUser extends User {
     public CompanyUser(String email, String displayName, String companyName, String taxId) {
         super(email, displayName);
         if (companyName.length() > 100 || companyName.length() < 3) {
-            throw new IllegalArgumentException("Invalid company name: " +  companyName);
+            throw new IllegalArgumentException("Invalid company name: " + companyName);
         }
         if (taxId.length() != 5) {
-            throw new IllegalArgumentException("Invalid tax id: " +  taxId);
+            throw new IllegalArgumentException("Invalid tax id: " + taxId);
         }
-        this.companyName = Objects.requireNonNull(companyName,  "companyName cannot be null");
-        this.taxId = Objects.requireNonNull(taxId,  "taxId cannot be null");
+        this.companyName = Objects.requireNonNull(companyName, "companyName cannot be null");
+        this.taxId = Objects.requireNonNull(taxId, "taxId cannot be null");
     }
 
     public CompanyUser(String email, String companyName, String taxId) {

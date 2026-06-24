@@ -7,20 +7,20 @@ import java.util.regex.Pattern;
 public class User {
     private String email;
     private String displayName;
-    private static final HashSet<String> emailsUnique = new HashSet<>();
+    private static final HashSet<String> EMAILS_UNIQUE = new HashSet<>();
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
     public User(String email, String displayName) {
-        if (!(EMAIL_PATTERN.matcher(email).matches())){
+        Objects.requireNonNull(email, "email cannot be null");
+        if (!(EMAIL_PATTERN.matcher(email).matches())) {
             throw new IllegalArgumentException("Invalid email: " + email);
         }
-        if (emailsUnique.contains(email)) {
-            throw new IllegalArgumentException("email already exists: " +  email);
+        if (EMAILS_UNIQUE.contains(email)) {
+            throw new IllegalArgumentException("email already exists: " + email);
         }
-
         this.email = email;
         this.displayName = Objects.requireNonNull(displayName, "displayName cannot be null");
-        emailsUnique.add(email);
+        EMAILS_UNIQUE.add(email);
     }
 
     public User(String email) {

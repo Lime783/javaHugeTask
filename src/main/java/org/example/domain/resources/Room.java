@@ -12,16 +12,21 @@ public class Room extends Resource {
     private Set<String> equipment;
 
     public Room(String name, Money customHourlyRate, int seats, Set<String> equipment) {
+        Objects.requireNonNull(name, "Room name cannot be null");
         if (name.length() < 3 || name.length() > 100) {
             throw new IllegalArgumentException("Invalid room name: " + name);
         }
-        if (seats < 0){
+        if (seats < 0) {
             throw new IllegalArgumentException("Number of seats cannot be negative: " + seats);
         }
-        this.name = Objects.requireNonNull(name, "Room name cannot be null");
+        if (NAMES_UNIQUE.contains(name)) {
+            throw new IllegalArgumentException("Room name already exists: " + name);
+        }
+        this.name = name;
         this.customHourlyRate = customHourlyRate;
         this.seats = seats;
         this.equipment = equipment;
+        NAMES_UNIQUE.add(name);
     }
 
     public Room(String name, int seats, Set<String> equipment) {
@@ -73,10 +78,10 @@ public class Room extends Resource {
     public String describe() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Room with: ");
-        for(String equipmentName : equipment) {
+        for (String equipmentName : equipment) {
             stringBuilder.append(equipmentName).append(", ");
         }
-        stringBuilder.delete(stringBuilder.length()-2, stringBuilder.length());
+        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
         return (Objects.equals(stringBuilder.toString(), "Room with: ") ? "Room without equipment" : stringBuilder.toString());
     }
 }
