@@ -44,12 +44,36 @@ public record Money(BigDecimal amount) {
         return new Money(amount.subtract(amountToSubtract.amount));
     }
 
-    Money multiply(Money multiplier) {
+    public Money multiply(Money multiplier) {
         Objects.requireNonNull(multiplier, "multiplier must not be null");
         if (multiplier.amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("multiplier cannot be negative: " + multiplier);
         }
         return new Money(amount.multiply(multiplier.amount).setScale(2, RoundingMode.HALF_UP));
+    }
+
+    public Money multiply(BigDecimal multiplier) {
+        return multiply(new Money(multiplier));
+    }
+
+    public Money multiply(String multiplier) {
+       return multiply(new BigDecimal(multiplier));
+    }
+
+    public Money divide(Money divisor) {
+        Objects.requireNonNull(divisor, "divider must not be null");
+        if (divisor.amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("divider cannot be negative: " + divisor);
+        }
+        return new Money(amount.divide(divisor.amount, 2, RoundingMode.HALF_UP));
+    }
+
+    public Money divide(BigDecimal divisor) {
+        return divide(new Money(divisor));
+    }
+
+    public Money divide(String divisor) {
+        return divide(new BigDecimal(divisor));
     }
 
     int compareTo(Money moneyToCompare) {
