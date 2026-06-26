@@ -5,6 +5,7 @@ import org.example.domain.resources.Resource;
 import org.example.domain.users.User;
 import org.example.money.Money;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,7 +34,7 @@ public class Booking {
 
         isValidBookingId(id);
         if (startTime.isAfter(endTime)) {
-            throw new IllegalStateException("start time: " + startTime + " cannot be after end time: "  + endTime);
+            throw new IllegalStateException("start time: " + startTime + " cannot be after end time: " + endTime);
         }
 
         this.id = id;
@@ -62,5 +63,96 @@ public class Booking {
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Invalid date format in booking id: " + datePart);
         }
+    }
+
+    public void changeStatusToNextState() {
+        switch (bookingStatus) {
+            case PENDING -> bookingStatus = BookingStatus.CONFIRMED;
+            case CONFIRMED -> bookingStatus = BookingStatus.COMPLETED;
+            case COMPLETED -> throw new IllegalStateException("booking is already completed");
+            case CANCELLED -> throw new IllegalStateException("booking is already cancelled");
+        }
+    }
+
+    public int durationInMinutes() {
+        return Duration.between(startTime, endTime).toMinutesPart();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public BookingStatus getBookingStatus() {
+        return bookingStatus;
+    }
+
+    public void setBookingStatus(BookingStatus bookingStatus) {
+        this.bookingStatus = bookingStatus;
+    }
+
+    public Money getCalculatedPrice() {
+        return calculatedPrice;
+    }
+
+    public void setCalculatedPrice(Money calculatedPrice) {
+        this.calculatedPrice = calculatedPrice;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "id='" + id + '\'' +
+                ", user=" + user +
+                ", resource=" + resource +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", bookingStatus=" + bookingStatus +
+                ", calculatedPrice=" + calculatedPrice +
+                ", payment=" + payment +
+                '}';
     }
 }

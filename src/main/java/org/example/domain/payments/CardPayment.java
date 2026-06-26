@@ -55,8 +55,20 @@ public class CardPayment extends Payment {
     }
 
     @Override
-    protected void capture() {
-        // TODO: Zrobic cos jeszcze
+    public void capture() {
+        if (getPaymentStatus().equals(PaymentStatus.CAPTURED)) {
+            throw  new IllegalStateException("Payment already captured");
+        }
         paymentStatus = PaymentStatus.CAPTURED;
+    }
+
+    @Override
+    public String toString() {
+        return "CardPayment{" +
+                "last4Digits='" + last4Digits + '\'' +
+                ", amount=" + amount +
+                ", paymentId='" + paymentId + '\'' +
+                ", paymentStatus=" + paymentStatus +
+                '}';
     }
 }

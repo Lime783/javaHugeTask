@@ -13,6 +13,10 @@ public record Money(BigDecimal amount) {
         this.amount = amount.setScale(2, RoundingMode.HALF_UP);
     }
 
+    public Money(String amount){
+        this(new BigDecimal(amount));
+    }
+
     static Money of(String amount) {
         Objects.requireNonNull(amount, "amount must not be null");
         if (new BigDecimal(amount).compareTo(BigDecimal.ZERO) < 0) {
@@ -21,7 +25,7 @@ public record Money(BigDecimal amount) {
         return new Money(new BigDecimal(amount).setScale(2, RoundingMode.HALF_UP));
     }
 
-    Money add(Money amountToAdd) {
+    public Money add(Money amountToAdd) {
         Objects.requireNonNull(amountToAdd, "amountToAdd must not be null");
         if (amountToAdd.amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("amount cannot be negative: " + amountToAdd);
@@ -29,13 +33,13 @@ public record Money(BigDecimal amount) {
         return new Money(amount.add(amountToAdd.amount));
     }
 
-    Money subtract(Money amountToSubtract) {
+    public Money subtract(Money amountToSubtract) {
         Objects.requireNonNull(amountToSubtract, "amountToSubtract must not be null");
         if (amountToSubtract.amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("amount cannot be negative: " + amountToSubtract);
         }
         if (amount.subtract(amountToSubtract.amount).compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("amount to substract cannot be greater than current balance: " + amountToSubtract);
+            throw new IllegalArgumentException("amount to substract: " + amountToSubtract + " cannot be greater than current balance: " + amount + " PLN");
         }
         return new Money(amount.subtract(amountToSubtract.amount));
     }

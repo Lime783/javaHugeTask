@@ -16,7 +16,7 @@ public class Desk extends Resource {
             throw new IllegalArgumentException("Invalid desk name: " + name);
         }
         if (NAMES_UNIQUE.contains(name)) {
-            throw new IllegalArgumentException("Room name already exists: " + name);
+            throw new IllegalArgumentException("Desk name already exists: " + name);
         }
         this.name = name;
         this.customHourlyRate = customHourlyRate;

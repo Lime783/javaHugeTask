@@ -34,7 +34,7 @@ public class Room extends Resource {
     }
 
     public Room(String name, int seats) {
-        this(name, null, seats, null);
+        this(name, null, seats, Set.of());
     }
 
     public String getName() {
@@ -76,12 +76,15 @@ public class Room extends Resource {
 
     @Override
     public String describe() {
+        if (equipment.isEmpty()) {
+            return "Room " + name + " without equipment";
+        }
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Room with: ");
+        stringBuilder.append("Room ").append(name).append(" with: ");
         for (String equipmentName : equipment) {
             stringBuilder.append(equipmentName).append(", ");
         }
         stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
-        return (Objects.equals(stringBuilder.toString(), "Room with: ") ? "Room without equipment" : stringBuilder.toString());
+        return stringBuilder.toString();
     }
 }

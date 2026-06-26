@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class User {
+public abstract class User {
     private String email;
     private String displayName;
     private static final HashSet<String> EMAILS_UNIQUE = new HashSet<>();
@@ -12,14 +12,17 @@ public class User {
 
     public User(String email, String displayName) {
         Objects.requireNonNull(email, "email cannot be null");
+        Objects.requireNonNull(displayName, "displayName cannot be null");
+
         if (!(EMAIL_PATTERN.matcher(email).matches())) {
             throw new IllegalArgumentException("Invalid email: " + email);
         }
         if (EMAILS_UNIQUE.contains(email)) {
             throw new IllegalArgumentException("email already exists: " + email);
         }
+
         this.email = email;
-        this.displayName = Objects.requireNonNull(displayName, "displayName cannot be null");
+        this.displayName = displayName;
         EMAILS_UNIQUE.add(email);
     }
 
