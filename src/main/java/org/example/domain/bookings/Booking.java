@@ -1,5 +1,7 @@
 package org.example.domain.bookings;
 
+import org.example.domain.payments.Billable;
+import org.example.domain.payments.Invoice;
 import org.example.domain.payments.Payment;
 import org.example.domain.resources.Resource;
 import org.example.domain.users.User;
@@ -14,7 +16,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Booking {
+public class Booking implements Billable {
     private String id;
     private User user;
     private Resource resource;
@@ -76,6 +78,11 @@ public class Booking {
 
     public int durationInMinutes() {
         return Duration.between(startTime, endTime).toMinutesPart();
+    }
+
+    @Override
+    public Invoice toInvoice(Booking booking) {
+        return null;
     }
 
     public String getId() {

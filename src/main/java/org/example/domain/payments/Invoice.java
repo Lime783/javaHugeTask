@@ -1,5 +1,6 @@
 package org.example.domain.payments;
 
+import org.example.domain.bookings.Booking;
 import org.example.domain.users.User;
 import org.example.money.Money;
 
