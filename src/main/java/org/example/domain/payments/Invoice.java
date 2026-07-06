@@ -73,4 +73,15 @@ public class Invoice {
     public void setItemDescription(String itemDescription) {
         this.itemDescription = itemDescription;
     }
+
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "invoiceId='" + invoiceId + '\'' +
+                ", invoiceDate=" + invoiceDate +
+                ", buyer=" + buyer +
+                ", total=" + total +
+                ", itemDescription='" + itemDescription + '\'' +
+                '}';
+    }
 }

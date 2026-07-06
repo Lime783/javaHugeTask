@@ -5,7 +5,7 @@ import org.example.domain.users.User;
 import java.util.List;
 
 public class InMemoryUserRepository implements UserRepository {
-    List<User> users;
+    private List<User> users;
 
     public InMemoryUserRepository(List<User> users) {
         this.users = users;

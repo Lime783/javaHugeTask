@@ -5,7 +5,7 @@ import org.example.domain.resources.Resource;
 import java.util.List;
 
 public class InMemoryResourceRepository implements ResourceRepository {
-    List<Resource> resources;
+    private List<Resource> resources;
 
     public void addResource(Resource resource) {
         resources.add(resource);

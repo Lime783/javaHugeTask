@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Booking implements Billable {
+public class Booking {
     private String id;
     private User user;
     private Resource resource;
@@ -32,9 +32,9 @@ public class Booking implements Billable {
         Objects.requireNonNull(resource, "resource cannot be null");
         Objects.requireNonNull(startTime, "startTime cannot be null");
         Objects.requireNonNull(endTime, "endTime cannot be null");
-        Objects.requireNonNull(payment, "payment cannot be null");
 
-        isValidBookingId(id);
+//        TODO: zmienic
+//        isValidBookingId(id);
         if (startTime.isAfter(endTime)) {
             throw new IllegalStateException("start time: " + startTime + " cannot be after end time: " + endTime);
         }
@@ -44,10 +44,16 @@ public class Booking implements Billable {
         this.resource = resource;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.bookingStatus = BookingStatus.PENDING;
+        this.calculatedPrice = null;
         this.payment = payment;
     }
 
-    private void isValidBookingId(String id) {
+    public Booking(String id, User user, Resource resource, LocalDateTime startTime, LocalDateTime endTime) {
+        this(id, user, resource, startTime, endTime, null);
+    }
+
+        private void isValidBookingId(String id) {
         Matcher matcher = CODE_PATTERN.matcher(id);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid booking id: " + id);
@@ -67,22 +73,8 @@ public class Booking implements Billable {
         }
     }
 
-    public void changeStatusToNextState() {
-        switch (bookingStatus) {
-            case PENDING -> bookingStatus = BookingStatus.CONFIRMED;
-            case CONFIRMED -> bookingStatus = BookingStatus.COMPLETED;
-            case COMPLETED -> throw new IllegalStateException("booking is already completed");
-            case CANCELLED -> throw new IllegalStateException("booking is already cancelled");
-        }
-    }
-
     public int durationInMinutes() {
         return Duration.between(startTime, endTime).toMinutesPart();
-    }
-
-    @Override
-    public Invoice toInvoice(Booking booking) {
-        return null;
     }
 
     public String getId() {

@@ -7,26 +7,28 @@ import java.util.Objects;
 
 public class Device extends Resource {
 
-    int quantity;
+    int maxQuantity;
+    int remainingQuantity;
 
-    public Device(String name, Money customHourlyRate, int quantity) {
+    public Device(String name, Money customHourlyRate, int maxQuantity) {
         if (name.length() < 3 || name.length() > 100) {
             throw new IllegalArgumentException("Invalid name: " + name);
         }
-        if (quantity < 1) {
-            throw new IllegalArgumentException("Invalid quantity: " + quantity);
+        if (maxQuantity < 1) {
+            throw new IllegalArgumentException("Invalid quantity: " + maxQuantity);
         }
         if (NAMES_UNIQUE.contains(name)) {
             throw new IllegalArgumentException("Device name already exists: " + name);
         }
         this.name = Objects.requireNonNull(name);
         this.customHourlyRate = customHourlyRate;
-        this.quantity = quantity;
+        this.maxQuantity = maxQuantity;
+        this.remainingQuantity = maxQuantity;
         NAMES_UNIQUE.add(name);
     }
 
-    public Device(String name, int quantity) {
-        this(name, null, quantity);
+    public Device(String name, int maxQuantity) {
+        this(name, null, maxQuantity);
     }
 
     public String getName() {
@@ -45,12 +47,20 @@ public class Device extends Resource {
         this.customHourlyRate = customHourlyRate;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getMaxQuantity() {
+        return maxQuantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setMaxQuantity(int maxQuantity) {
+        this.maxQuantity = maxQuantity;
+    }
+
+    public int getRemainingQuantity() {
+        return remainingQuantity;
+    }
+
+    public void setRemainingQuantity(int remainingQuantity) {
+        this.remainingQuantity = remainingQuantity;
     }
 
     @Override
@@ -60,6 +70,6 @@ public class Device extends Resource {
 
     @Override
     public String describe() {
-        return "Device " + name + ", max to lend: " + quantity;
+        return "Device " + name + ", max to lend: " + maxQuantity;
     }
 }
