@@ -1,10 +1,14 @@
 package org.example;
 
 
+import org.example.cli.CLI;
 import org.example.domain.payments.CardPayment;
 import org.example.domain.resources.Resource;
 import org.example.domain.resources.Room;
 import org.example.money.Money;
+import org.example.repositories.InMemoryBookingRepository;
+import org.example.repositories.InMemoryResourceRepository;
+import org.example.repositories.InMemoryUserRepository;
 
 import java.util.Set;
 
@@ -41,5 +45,11 @@ public class Main {
 //        testRoomConstructors();
 //        testCardPayments();
 
+        var inMemoryBookingRepository = new InMemoryBookingRepository();
+        var inMemoryResourceRepository = new InMemoryResourceRepository();
+        var inMemoryUserRepository = new InMemoryUserRepository();
+
+        CLI cli = new CLI(inMemoryBookingRepository, inMemoryResourceRepository, inMemoryUserRepository);
+//        ADD_USER INDIVIDUAL siemaeniu@wp.pl Jan
     }
 }

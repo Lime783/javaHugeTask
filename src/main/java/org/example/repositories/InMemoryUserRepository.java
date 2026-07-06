@@ -2,13 +2,14 @@ package org.example.repositories;
 
 import org.example.domain.users.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryUserRepository implements UserRepository {
-    private List<User> users;
+    private final List<User> users;
 
-    public InMemoryUserRepository(List<User> users) {
-        this.users = users;
+    public InMemoryUserRepository() {
+        users = new ArrayList<>();
     }
 
     public void addUser(User user) {
