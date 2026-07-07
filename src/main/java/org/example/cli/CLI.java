@@ -20,8 +20,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Scanner;
 
-//TODO: ladniejsze komunikaty zwrotne
-
 public class CLI {
     Scanner scanner = new Scanner(System.in);
     private final InMemoryBookingRepository bookingRepository;
@@ -100,13 +98,12 @@ public class CLI {
 
         String email = parts[2];
 
-        // TODO: zrobic ladniej
         String displayName = "";
-        for (int i = 3; i < parts.length - 1; i++) {
+        for (int i = 3; i <= parts.length - 1; i++) {
             displayName += parts[i] + " ";
         }
         getUserRepository().addUser(new IndividualUser(email, displayName));
-        System.out.println("Success");
+        System.out.println("Successfully added " + displayName + ", " + email);
     }
 
     private void addCompanyUser() {
@@ -127,22 +124,21 @@ public class CLI {
 
         String email = parts[2];
 
-        // TODO: zrobic ladniej
         String companyName = "";
-        for (int i = 3; i < parts.length - 1; i++) {
+        for (int i = 3; i <= parts.length - 2; i++) {
             companyName += parts[i] + " ";
         }
         String taxID = parts[parts.length - 1];
         getUserRepository().addUser(new CompanyUser(email, companyName, taxID));
-        System.out.println("Success");
+        System.out.println("Successfully added " + companyName + ", " + email);
     }
 
     private void listAllUsers() {
-        System.out.println("LIST_USERS");
-        if (!(scanner.nextLine().equals("LIST_USERS"))) {
-            System.out.println("Invalid command");
-            return;
-        }
+//        System.out.println("LIST_USERS");
+//        if (!(scanner.nextLine().equals("LIST_USERS"))) {
+//            System.out.println("Invalid command");
+//            return;
+//        }
         getUserRepository().getUsers().forEach(System.out::println);
     }
 
@@ -150,20 +146,28 @@ public class CLI {
         System.out.println("""
                 What command do you want to use?
                 1 - add a room
-                2 - add a desk
-                3 - add a device
-                4 - list all resources
+                2 - add a room with custom hourly rate
+                3 - add a desk
+                4 - add a desk with custom hourly rate
+                5 - add a device
+                6 - add a device with custom hourly rate
+                7 - list all resources
                 """);
         switch (scanner.nextLine()) {
             case "1" -> addRoom();
-            case "2" -> addDesk();
-            case "3" -> addDevice();
-            case "4" -> listAllDevices();
+            case "2" -> addRoomWithCustomHourlyRate();
+            case "3" -> addDesk();
+            case "4" -> addDeskWithCustomHourlyRate();
+            case "5" -> addDevice();
+            case "6" -> addDeviceWithCustomHourlyRate();
+            case "7" -> listAllDevices();
         }
     }
 
+//     <customHourlyRate>
+
     private void addRoom() {
-        System.out.println("ADD_ROOM <name> <seats> (optionally) <customHourlyRate>");
+        System.out.println("ADD_ROOM <name> <seats>");
         String command = scanner.nextLine();
         String[] parts = command.split("\\s+");
 
@@ -177,26 +181,46 @@ public class CLI {
             return;
         }
 
-//        String name = parts[1];
-
-        // TODO: zrobic ladniej
         String name = "";
-        for (int i = 0; i < parts.length - 2; i++) {
+        for (int i = 1; i <= parts.length - 2; i++) {
             name += parts[i] + " ";
         }
 
-        int seats = Integer.parseInt(parts[2]);
-        Money price = null;
-        if (parts.length == 4) {
-            price = new Money(parts[parts.length - 1]);
+        int seats = Integer.parseInt(parts[parts.length - 1]);
+
+        getResourceRepository().addResource(new Room(name, seats));
+        System.out.println("Successfully added " + name + " with " + seats + " seats");
+    }
+
+    private void addRoomWithCustomHourlyRate() {
+        System.out.println("ADD_ROOM <name> <seats> <customHourlyRate>");
+        String command = scanner.nextLine();
+        String[] parts = command.split("\\s+");
+
+        if (parts.length < 4) {
+            System.out.println("Invalid command length");
+            return;
         }
 
-        getResourceRepository().addResource(new Room(name, price, seats));
-        System.out.println("Success");
+        if (!(parts[0].equals("ADD_ROOM"))) {
+            System.out.println("Invalid command");
+            return;
+        }
+
+        String name = "";
+        for (int i = 1; i <= parts.length - 3; i++) {
+            name += parts[i] + " ";
+        }
+
+        int seats = Integer.parseInt(parts[parts.length - 2]);
+        Money customHourlyRate = Money.of(parts[parts.length - 1]);
+
+        getResourceRepository().addResource(new Room(name, customHourlyRate, seats));
+        System.out.println("Successfully added " + name + " with " + seats + " seats and custom hour rate of " + customHourlyRate);
     }
 
     private void addDesk() {
-        System.out.println("ADD_DESK <name> <small|regular> (optionally) <customHourlyRate>");
+        System.out.println("ADD_DESK <name> <small|regular>");
         String command = scanner.nextLine();
         String[] parts = command.split("\\s+");
 
@@ -210,19 +234,51 @@ public class CLI {
             return;
         }
 
-        String name = parts[1];
-        DeskType deskType = DeskType.valueOf(parts[2]);
-        Money customHourlyRate = null;
-        if (parts.length == 4) {
-            customHourlyRate = new Money(parts[3]);
+        String name = "";
+        for (int i = 1; i <= parts.length - 2; i++) {
+            name += parts[i] + " ";
         }
 
+        DeskType deskType = DeskType.valueOf(parts[parts.length - 1].toUpperCase());
+
+        getResourceRepository().addResource(new Desk(name, deskType));
+        System.out.println("Successfully added " + name + " desk which is " + deskType);
+    }
+
+    private void addDeskWithCustomHourlyRate() {
+        System.out.println("ADD_DESK <name> <small|regular> <customHourlyRate>");
+        String command = scanner.nextLine();
+        String[] parts = command.split("\\s+");
+
+        if (parts.length < 4) {
+            System.out.println("Invalid command length");
+            return;
+        }
+
+        if (!(parts[0].equals("ADD_DESK"))) {
+            System.out.println("Invalid command");
+            return;
+        }
+
+        if (!(parts[parts.length - 2].equals("small") || parts[parts.length - 2].equals("regular"))) {
+            System.out.println("Invalid desk type");
+            return;
+        }
+
+        String name = "";
+        for (int i = 1; i <= parts.length - 3; i++) {
+            name += parts[i] + " ";
+        }
+
+        DeskType deskType = DeskType.valueOf(parts[parts.length - 2].toUpperCase());
+        Money customHourlyRate = Money.of(parts[parts.length - 1]);
+
         getResourceRepository().addResource(new Desk(name, customHourlyRate, deskType));
-        System.out.println("Success");
+        System.out.println("Successfully added " + name + " desk which is " + deskType + " and costs " + customHourlyRate + " per hour");
     }
 
     private void addDevice() {
-        System.out.println("ADD_DEVICE <name> <quantity> (optionally) <customHourlyRate>");
+        System.out.println("ADD_DEVICE <name> <quantity>");
         String command = scanner.nextLine();
         String[] parts = command.split("\\s+");
 
@@ -236,23 +292,50 @@ public class CLI {
             return;
         }
 
-        String name = parts[1];
-        int quantity = Integer.parseInt(parts[2]);
-        Money customHourlyRate = null;
-        if (parts.length == 4) {
-            customHourlyRate = new Money(parts[3]);
+        String name = "";
+        for (int i = 1; i <= parts.length - 2; i++) {
+            name += parts[i] + " ";
         }
 
-        getResourceRepository().addResource(new Room(name, customHourlyRate, quantity));
-        System.out.println("Success");
+        int quantity = Integer.parseInt(parts[parts.length - 1]);
+
+        getResourceRepository().addResource(new Room(name, quantity));
+        System.out.println("Successfully added " + name + " (max " + quantity + ")");
     }
 
-    private void listAllDevices() {
-        System.out.println("LIST_RESOURCES");
-        if (!(scanner.nextLine().equals("LIST_RESOURCES"))) {
+    private void addDeviceWithCustomHourlyRate() {
+        System.out.println("ADD_DEVICE <name> <quantity> <customHourlyRate>");
+        String command = scanner.nextLine();
+        String[] parts = command.split("\\s+");
+
+        if (parts.length < 4) {
+            System.out.println("Invalid command length");
+            return;
+        }
+
+        if (!(parts[0].equals("ADD_DEVICE"))) {
             System.out.println("Invalid command");
             return;
         }
+
+        String name = "";
+        for (int i = 1; i <= parts.length - 3; i++) {
+            name += parts[i] + " ";
+        }
+
+        int quantity = Integer.parseInt(parts[parts.length - 2]);
+        Money customHourlyRate = Money.of(parts[parts.length - 1]);
+
+        getResourceRepository().addResource(new Room(name, customHourlyRate, quantity));
+        System.out.println("Successfully added " + name + " (max " + quantity + ") which costs " + customHourlyRate + " per hour");
+    }
+
+    private void listAllDevices() {
+//        System.out.println("LIST_RESOURCES");
+//        if (!(scanner.nextLine().equals("LIST_RESOURCES"))) {
+//            System.out.println("Invalid command");
+//            return;
+//        }
         getResourceRepository().getResources().forEach(System.out::println);
     }
 
@@ -290,15 +373,18 @@ public class CLI {
         }
 
         String userEmail = parts[1];
-        String resourceName = parts[2];
-        LocalDateTime start = LocalDateTime.parse(parts[3]);
-        LocalDateTime end = LocalDateTime.parse(parts[4]);
+        String resourceName = "";
+        for (int i = 2; i <= parts.length - 3; i++) {
+            resourceName += parts[i] + " ";
+        }
+        LocalDateTime start = LocalDateTime.parse(parts[parts.length - 2]);
+        LocalDateTime end = LocalDateTime.parse(parts[parts.length - 1]);
         User user = getUserRepository().findUserByEmail(userEmail);
         Resource resource = getResourceRepository().findResourceByName(resourceName);
 
         BookingService bookingService = new BookingService();
         bookingService.book(user, resource, start, end, getBookingRepository());
-        System.out.println("Success");
+        System.out.println("Successfully booked " + resourceName + " to " + userEmail + " from " + start + " to " + end);
     }
 
     private void bookResourceFromFor() {
@@ -317,15 +403,19 @@ public class CLI {
         }
 
         String userEmail = parts[1];
-        String resourceName = parts[2];
-        LocalDateTime start = LocalDateTime.parse(parts[3]);
-        LocalDateTime end = start.plusMinutes(Integer.parseInt(parts[4]));
+        String resourceName = "";
+        for (int i = 2; i <= parts.length - 3; i++) {
+            resourceName += parts[i] + " ";
+        }
+
+        LocalDateTime start = LocalDateTime.parse(parts[parts.length - 2]);
+        LocalDateTime end = start.plusMinutes(Integer.parseInt(parts[parts.length - 1]));
         User user = getUserRepository().findUserByEmail(userEmail);
         Resource resource = getResourceRepository().findResourceByName(resourceName);
 
         BookingService bookingService = new BookingService();
         bookingService.book(user, resource, start, end, getBookingRepository());
-        System.out.println("Success");
+        System.out.println("Successfully booked " + resourceName + " to " + userEmail + " from " + start + " to " + end);
     }
 
     private void confirmBooking() {
@@ -348,7 +438,7 @@ public class CLI {
 
         BookingService bookingService = new BookingService();
         bookingService.confirmBooking(bookingToConfirm);
-        System.out.println("Success");
+        System.out.println("Successfully confirmed booking " + bookingToConfirm.getId());
     }
 
     private void cancelBooking() {
@@ -371,15 +461,15 @@ public class CLI {
 
         BookingService bookingService = new BookingService();
         bookingService.cancelBooking(bookingToConfirm);
-        System.out.println("Success");
+        System.out.println("Successfully canceled booking " + bookingToConfirm.getId());
     }
 
     private void listAllBookings() {
-        System.out.println("LIST_BOOKINGS");
-        if (!(scanner.nextLine().equals("LIST_BOOKINGS"))) {
-            System.out.println("Invalid command");
-            return;
-        }
+//        System.out.println("LIST_BOOKINGS");
+//        if (!(scanner.nextLine().equals("LIST_BOOKINGS"))) {
+//            System.out.println("Invalid command");
+//            return;
+//        }
         getBookingRepository().getBookings().forEach(System.out::println);
     }
 
@@ -422,7 +512,7 @@ public class CLI {
 
         PaymentService paymentService = new PaymentService();
         paymentService.pay(bookingId, last4, getBookingRepository());
-        System.out.println("Success");
+        System.out.println("Successfully paid for booking " + bookingId + " using card with 4 last digits: " + last4);
     }
 
     private void createInvoice() {
@@ -445,7 +535,7 @@ public class CLI {
 
         BillingService billingService = new BillingService();
         billingService.toInvoice(bookingToInvoice);
-        System.out.println("Success");
+        System.out.println("Successfully created invoice for booking " + bookingToInvoice.getId());
     }
 
     private void showHelp() {
@@ -469,9 +559,12 @@ public class CLI {
                 
                 RESOURCES
                 1 - add a room
-                2 - add a desk
-                3 - add a device
-                4 - list all resources
+                2 - add a room with custom hourly rate
+                3 - add a desk
+                4 - add a desk with custom hourly rate
+                5 - add a device
+                6 - add a device with custom hourly rate
+                7 - list all resources
                 
                 BOOKINGS
                 1 - book a resource from x to y

@@ -60,4 +60,13 @@ public class Desk extends Resource {
     public String describe() {
         return "Desk \"" + name + "\" which is " + deskType;
     }
+
+    @Override
+    public String toString() {
+        return "Desk{" +
+                "name='" + name + '\'' +
+                ", deskType=" + deskType +
+                ", customHourlyRate=" + customHourlyRate +
+                '}';
+    }
 }

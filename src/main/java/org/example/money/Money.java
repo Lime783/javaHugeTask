@@ -17,7 +17,7 @@ public record Money(BigDecimal amount) {
         this(new BigDecimal(amount));
     }
 
-    static Money of(String amount) {
+    public static Money of(String amount) {
         Objects.requireNonNull(amount, "amount must not be null");
         if (new BigDecimal(amount).compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("amount cannot be negative: " + amount);

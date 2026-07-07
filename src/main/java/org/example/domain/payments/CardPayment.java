@@ -17,7 +17,6 @@ public class CardPayment extends Payment {
     private static int counter = 0;
 
     public CardPayment(Money amount, String last4Digits) {
-        Objects.requireNonNull(paymentId, "paymentId cannot be null");
         Objects.requireNonNull(last4Digits, "last4Digits cannot be null");
         if (!(FOUR_DIGITS.matcher(last4Digits).matches())) {
             throw new IllegalArgumentException("Invalid 4 digits: " + last4Digits);
@@ -37,11 +36,6 @@ public class CardPayment extends Payment {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid booking id: " + id);
         }
-        isValidBookingDate(id);
-    }
-
-    private void isValidBookingDate(String id) {
-        Matcher matcher = CODE_PATTERN.matcher(id);
 
         String datePart = matcher.group(1);
 
@@ -51,6 +45,18 @@ public class CardPayment extends Payment {
             throw new IllegalArgumentException("Invalid date format in booking id: " + datePart);
         }
     }
+
+//    private void isValidBookingDate(String id) {
+//        Matcher matcher = CODE_PATTERN.matcher(id);
+//
+//        String datePart = matcher.group(1);
+//
+//        try {
+//            LocalDate.parse(datePart, DateTimeFormatter.BASIC_ISO_DATE);
+//        } catch (DateTimeParseException e) {
+//            throw new IllegalArgumentException("Invalid date format in booking id: " + datePart);
+//        }
+//    }
 
     public Money getAmount() {
         return amount;

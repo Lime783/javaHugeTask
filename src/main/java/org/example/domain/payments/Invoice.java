@@ -34,7 +34,7 @@ public class Invoice {
             throw new IllegalArgumentException("item description is too short: " + itemDescription);
         }
 
-        String invoiceId = "BK-" + invoiceDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "-" + counter++;
+        String invoiceId = "INV-" + invoiceDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "-" + counter++;
         isValidInvoiceId(invoiceId);
 
         this.invoiceId = invoiceId;
@@ -47,20 +47,15 @@ public class Invoice {
     private void isValidInvoiceId(String id) {
         Matcher matcher = CODE_PATTERN.matcher(id);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("Invalid booking id: " + id);
+            throw new IllegalArgumentException("Invalid invoice id: " + id);
         }
-        isValidInvoiceDate(id);
-    }
-
-    private void isValidInvoiceDate(String id) {
-        Matcher matcher = CODE_PATTERN.matcher(id);
 
         String datePart = matcher.group(1);
 
         try {
             LocalDate.parse(datePart, DateTimeFormatter.BASIC_ISO_DATE);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid date format in booking id: " + datePart);
+            throw new IllegalArgumentException("Invalid date format in invoice id: " + datePart);
         }
     }
 

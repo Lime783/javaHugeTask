@@ -38,4 +38,12 @@ public class CompanyUser extends User {
     public void setTaxId(String taxId) {
         this.taxId = taxId;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyUser{" +
+                "companyName='" + companyName + '\'' +
+                ", taxId='" + taxId + '\'' +
+                '}';
+    }
 }
