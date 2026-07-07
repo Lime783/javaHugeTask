@@ -33,9 +33,14 @@ public class Room extends Resource {
         this(name, null, seats, equipment);
     }
 
+    public Room(String name, Money customHourlyRate, int seats) {
+        this(name, customHourlyRate, seats, Set.of());
+    }
+
     public Room(String name, int seats) {
         this(name, null, seats, Set.of());
     }
+
 
     public String getName() {
         return name;

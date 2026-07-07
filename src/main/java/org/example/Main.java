@@ -51,5 +51,7 @@ public class Main {
 
         CLI cli = new CLI(inMemoryBookingRepository, inMemoryResourceRepository, inMemoryUserRepository);
 //        ADD_USER INDIVIDUAL siemaeniu@wp.pl Jan
+//        ADD_ROOM kuchnia 5
+//        BOOK siemaeniu@wp.pl kuchnia 2026-07-07T16:30 2026-07-07T18:30
     }
 }

@@ -6,7 +6,7 @@ import org.example.domain.payments.Payment;
 import org.example.repositories.InMemoryBookingRepository;
 
 public class PaymentService {
-    Payment pay(String bookingId, String cardLast4, InMemoryBookingRepository inMemoryBookingRepository) {
+    public Payment pay(String bookingId, String cardLast4, InMemoryBookingRepository inMemoryBookingRepository) {
         Booking bookingToPayFor = inMemoryBookingRepository.findBookingByID(bookingId);
 
         // TODO: zmienic paymentId

@@ -24,7 +24,6 @@ public class BookingService {
         Objects.requireNonNull(resource, "Resource must not be null");
         Objects.requireNonNull(startTime, "Start date must not be null");
         Objects.requireNonNull(endTime, "End date must not be null");
-        Objects.requireNonNull(paymentMethod, "Payment method must not be null");
 
         // TODO: zmienic id i payment, ew. odwołanie do bazy danych
         Booking newBooking = new Booking("123", user, resource, startTime, endTime, paymentMethod);
@@ -83,9 +82,18 @@ public class BookingService {
         }
     }
 
+    public Booking book(User user, Resource resource, LocalDateTime startTime, LocalDateTime endTime, InMemoryBookingRepository inMemoryBookingRepository) {
+        return book(user, resource, startTime, endTime, null, inMemoryBookingRepository);
+    }
+
     public Booking book(User user, Resource resource, LocalDateTime startTime, int durationInMinutes, Payment paymentMethod, InMemoryBookingRepository inMemoryBookingRepository) {
         LocalDateTime endTime = startTime.plusMinutes(durationInMinutes);
         return book(user, resource, startTime, endTime, paymentMethod, inMemoryBookingRepository);
+    }
+
+    public Booking book(User user, Resource resource, LocalDateTime startTime, int durationInMinutes, InMemoryBookingRepository inMemoryBookingRepository) {
+        LocalDateTime endTime = startTime.plusMinutes(durationInMinutes);
+        return book(user, resource, startTime, endTime, null, inMemoryBookingRepository);
     }
 
     public void confirmBooking(Booking bookingToConfirm) {
