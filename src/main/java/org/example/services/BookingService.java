@@ -111,12 +111,18 @@ public class BookingService {
         if (!(bookingStatus.equals(BookingStatus.PENDING) || bookingStatus.equals(BookingStatus.CONFIRMED))) {
             throw new IllegalStateException("booking: " + bookingToCancel.getId() + " cannot be cancelled, must be pending or confirmed");
         }
+        if (bookingToCancel.getResource() instanceof Device device){
+            device.setRemainingQuantity(device.getRemainingQuantity() + 1);
+        }
         bookingToCancel.setBookingStatus(BookingStatus.CANCELLED);
     }
 
     public void completeBooking(Booking bookingToComplete) {
         if (!(bookingToComplete.getBookingStatus().equals(BookingStatus.CONFIRMED))) {
             throw new IllegalStateException("booking: " + bookingToComplete.getId() + " cannot be completed, must be confirmed");
+        }
+        if (bookingToComplete.getResource() instanceof Device device){
+            device.setRemainingQuantity(device.getRemainingQuantity() + 1);
         }
         bookingToComplete.setBookingStatus(BookingStatus.COMPLETED);
     }

@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Scanner;
 
+//TODO: ladniejsze komunikaty zwrotne
+
 public class CLI {
     Scanner scanner = new Scanner(System.in);
     private final InMemoryBookingRepository bookingRepository;
