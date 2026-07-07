@@ -10,7 +10,6 @@ public class BillingService implements Billable {
 
     @Override
     public Invoice toInvoice(Booking booking) {
-        //TODO: zmienic id i opis
-        return new Invoice("123", LocalDateTime.now(), booking.getUser(), booking.getCalculatedPrice(), "Opis");
+        return new Invoice(LocalDateTime.now(), booking.getUser(), booking.getCalculatedPrice(), "description of booking: " + booking.toString());
     }
 }

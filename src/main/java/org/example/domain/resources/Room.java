@@ -92,4 +92,14 @@ public class Room extends Resource {
         stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
         return stringBuilder.toString();
     }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "name='" + name + '\'' +
+                ", seats=" + seats +
+                ", equipment=" + equipment +
+                ", customHourlyRate=" + customHourlyRate +
+                '}';
+    }
 }

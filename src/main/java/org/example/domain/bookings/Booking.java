@@ -1,7 +1,5 @@
 package org.example.domain.bookings;
 
-import org.example.domain.payments.Billable;
-import org.example.domain.payments.Invoice;
 import org.example.domain.payments.Payment;
 import org.example.domain.resources.Resource;
 import org.example.domain.users.User;
@@ -33,8 +31,7 @@ public class Booking {
         Objects.requireNonNull(startTime, "startTime cannot be null");
         Objects.requireNonNull(endTime, "endTime cannot be null");
 
-//        TODO: zmienic
-//        isValidBookingId(id);
+        isValidBookingId(id);
         if (startTime.isAfter(endTime)) {
             throw new IllegalStateException("start time: " + startTime + " cannot be after end time: " + endTime);
         }
@@ -53,19 +50,16 @@ public class Booking {
         this(id, user, resource, startTime, endTime, null);
     }
 
-        private void isValidBookingId(String id) {
+    private void isValidBookingId(String id) {
         Matcher matcher = CODE_PATTERN.matcher(id);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid booking id: " + id);
         }
-        isValidBookingDate(id);
+        isValidBookingDate(matcher);
     }
 
-    private void isValidBookingDate(String id) {
-        Matcher matcher = CODE_PATTERN.matcher(id);
-
+    private void isValidBookingDate(Matcher matcher) {
         String datePart = matcher.group(1);
-
         try {
             LocalDate.parse(datePart, DateTimeFormatter.BASIC_ISO_DATE);
         } catch (DateTimeParseException e) {
@@ -73,8 +67,8 @@ public class Booking {
         }
     }
 
-    public int durationInMinutes() {
-        return Duration.between(startTime, endTime).toMinutesPart();
+    public long durationInMinutes() {
+        return Duration.between(startTime, endTime).toMinutes();
     }
 
     public String getId() {

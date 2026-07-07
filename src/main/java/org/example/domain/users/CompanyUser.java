@@ -12,7 +12,7 @@ public class CompanyUser extends User {
         if (companyName.length() > 100 || companyName.length() < 3) {
             throw new IllegalArgumentException("Invalid company name: " + companyName);
         }
-        if (taxId.length() != 5) {
+        if (taxId.length() != 10) {
             throw new IllegalArgumentException("Invalid tax id: " + taxId);
         }
         this.companyName = Objects.requireNonNull(companyName, "companyName cannot be null");

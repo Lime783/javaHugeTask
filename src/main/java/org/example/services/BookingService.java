@@ -15,18 +15,21 @@ import org.example.repositories.InMemoryBookingRepository;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
 public class BookingService {
+    private static int counter = 0;
     public Booking book(User user, Resource resource, LocalDateTime startTime, LocalDateTime endTime, Payment paymentMethod, InMemoryBookingRepository inMemoryBookingRepository) {
         Objects.requireNonNull(user, "User must not be null");
         Objects.requireNonNull(resource, "Resource must not be null");
         Objects.requireNonNull(startTime, "Start date must not be null");
         Objects.requireNonNull(endTime, "End date must not be null");
 
-        // TODO: zmienic id i payment, ew. odwołanie do bazy danych
-        Booking newBooking = new Booking("123", user, resource, startTime, endTime, paymentMethod);
+        String id = "BK-" + startTime.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "-" + counter++;
+
+        Booking newBooking = new Booking(id, user, resource, startTime, endTime, paymentMethod);
         checkIfBookingIsValid(newBooking, inMemoryBookingRepository);
         if (resource instanceof Device device) {
             device.setRemainingQuantity(device.getRemainingQuantity() - 1);
@@ -105,10 +108,10 @@ public class BookingService {
 
     public void cancelBooking(Booking bookingToCancel) {
         BookingStatus bookingStatus = bookingToCancel.getBookingStatus();
-        if (bookingStatus.equals(BookingStatus.PENDING) || bookingStatus.equals(BookingStatus.CONFIRMED)) {
-            bookingToCancel.setBookingStatus(BookingStatus.CANCELLED);
+        if (!(bookingStatus.equals(BookingStatus.PENDING) || bookingStatus.equals(BookingStatus.CONFIRMED))) {
+            throw new IllegalStateException("booking: " + bookingToCancel.getId() + " cannot be cancelled, must be pending or confirmed");
         }
-        throw new IllegalStateException("booking: " + bookingToCancel.getId() + " cannot be cancelled, must be pending or confirmed");
+        bookingToCancel.setBookingStatus(BookingStatus.CANCELLED);
     }
 
     public void completeBooking(Booking bookingToComplete) {
@@ -118,7 +121,7 @@ public class BookingService {
         bookingToComplete.setBookingStatus(BookingStatus.COMPLETED);
     }
 
-    //TODO: czy o to chodzi, dodac filtry
+    //TODO: dodac filtry
     public List<Booking> getBookings(InMemoryBookingRepository inMemoryBookingRepository) {
         return inMemoryBookingRepository.getBookings();
     }

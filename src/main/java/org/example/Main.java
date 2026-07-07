@@ -32,7 +32,7 @@ public class Main {
     }
 
     public static void testCardPayments() {
-        CardPayment cardPayment1 = new CardPayment(new Money("12.34"), "abc123", "1234");
+        CardPayment cardPayment1 = new CardPayment(new Money("12.34"), "1234");
         System.out.println(cardPayment1);
         cardPayment1.capture();
         System.out.println(cardPayment1.getPaymentStatus());
@@ -50,8 +50,8 @@ public class Main {
         var inMemoryUserRepository = new InMemoryUserRepository();
 
         CLI cli = new CLI(inMemoryBookingRepository, inMemoryResourceRepository, inMemoryUserRepository);
-//        ADD_USER INDIVIDUAL siemaeniu@wp.pl Jan
-//        ADD_ROOM kuchnia 5
-//        BOOK siemaeniu@wp.pl kuchnia 2026-07-07T16:30 2026-07-07T18:30
+//        ADD_USER INDIVIDUAL siemaeniu@wp.pl Jan (1, 1)
+//        ADD_ROOM kuchnia 5 (2, 1)
+//        BOOK siemaeniu@wp.pl kuchnia 2026-07-07T16:30 2026-07-07T18:30 (3, 1)
     }
 }

@@ -9,8 +9,7 @@ public class PaymentService {
     public Payment pay(String bookingId, String cardLast4, InMemoryBookingRepository inMemoryBookingRepository) {
         Booking bookingToPayFor = inMemoryBookingRepository.findBookingByID(bookingId);
 
-        // TODO: zmienic paymentId
-        CardPayment cardPayment = new CardPayment(bookingToPayFor.getCalculatedPrice(), "123", cardLast4);
+        CardPayment cardPayment = new CardPayment(bookingToPayFor.getCalculatedPrice(), cardLast4);
         cardPayment.capture();
         bookingToPayFor.setPayment(cardPayment);
         return cardPayment;

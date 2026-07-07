@@ -97,7 +97,12 @@ public class CLI {
         }
 
         String email = parts[2];
-        String displayName = parts[3];
+
+        // TODO: zrobic ladniej
+        String displayName = "";
+        for (int i = 3; i < parts.length - 1; i++) {
+            displayName += parts[i] + " ";
+        }
         getUserRepository().addUser(new IndividualUser(email, displayName));
         System.out.println("Success");
     }
@@ -107,7 +112,7 @@ public class CLI {
         String command = scanner.nextLine();
         String[] parts = command.split("\\s+");
 
-        //TODO: companyName ze spacja
+        //companyName ze spacja w " "
         if (parts.length < 5) {
             System.out.println("Invalid command length");
             return;
@@ -119,8 +124,13 @@ public class CLI {
         }
 
         String email = parts[2];
-        String companyName = parts[3];
-        String taxID = parts[4];
+
+        // TODO: zrobic ladniej
+        String companyName = "";
+        for (int i = 3; i < parts.length - 1; i++) {
+            companyName += parts[i] + " ";
+        }
+        String taxID = parts[parts.length - 1];
         getUserRepository().addUser(new CompanyUser(email, companyName, taxID));
         System.out.println("Success");
     }
@@ -165,11 +175,18 @@ public class CLI {
             return;
         }
 
-        String name = parts[1];
+//        String name = parts[1];
+
+        // TODO: zrobic ladniej
+        String name = "";
+        for (int i = 0; i < parts.length - 2; i++) {
+            name += parts[i] + " ";
+        }
+
         int seats = Integer.parseInt(parts[2]);
         Money price = null;
         if (parts.length == 4) {
-            price = new Money(parts[3]);
+            price = new Money(parts[parts.length - 1]);
         }
 
         getResourceRepository().addResource(new Room(name, price, seats));
