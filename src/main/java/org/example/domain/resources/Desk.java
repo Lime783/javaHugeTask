@@ -27,30 +27,6 @@ public class Desk extends Resource {
         this(name, null, deskType);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Money getCustomHourlyRate() {
-        return customHourlyRate;
-    }
-
-    public void setCustomHourlyRate(Money customHourlyRate) {
-        this.customHourlyRate = customHourlyRate;
-    }
-
-    public DeskType getDeskType() {
-        return deskType;
-    }
-
-    public void setDeskType(DeskType deskType) {
-        this.deskType = deskType;
-    }
-
     @Override
     protected Money baseRatePerHour() {
         return new Money(new BigDecimal("12.34"));

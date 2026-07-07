@@ -46,48 +46,8 @@ public class CardPayment extends Payment {
         }
     }
 
-//    private void isValidBookingDate(String id) {
-//        Matcher matcher = CODE_PATTERN.matcher(id);
-//
-//        String datePart = matcher.group(1);
-//
-//        try {
-//            LocalDate.parse(datePart, DateTimeFormatter.BASIC_ISO_DATE);
-//        } catch (DateTimeParseException e) {
-//            throw new IllegalArgumentException("Invalid date format in booking id: " + datePart);
-//        }
-//    }
-
-    public Money getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Money amount) {
-        this.amount = amount;
-    }
-
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
-    }
-
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
-    }
-
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public String getLast4Digits() {
-        return last4Digits;
-    }
-
-    public void setLast4Digits(String last4Digits) {
-        this.last4Digits = last4Digits;
     }
 
     @Override

@@ -75,16 +75,8 @@ public class Booking {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Resource getResource() {
@@ -99,16 +91,8 @@ public class Booking {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
     public LocalDateTime getEndTime() {
         return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
     }
 
     public BookingStatus getBookingStatus() {
@@ -125,10 +109,6 @@ public class Booking {
 
     public void setCalculatedPrice(Money calculatedPrice) {
         this.calculatedPrice = calculatedPrice;
-    }
-
-    public Payment getPayment() {
-        return payment;
     }
 
     public void setPayment(Payment payment) {

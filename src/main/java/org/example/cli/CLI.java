@@ -47,8 +47,7 @@ public class CLI {
                 1 - users
                 2 - resources
                 3 - bookings
-                4 - pricings (not now)
-                5 - payments / invoices
+                4 - payments / invoices
                 HELP
                 QUIT
                 """);
@@ -59,8 +58,7 @@ public class CLI {
             case "1", "USERS" -> showUsersCategory();
             case "2", "RESOURCES" -> showResourcesCategory();
             case "3", "BOOKINGS" -> showBookingsCategory();
-//            case "4", "PRICINGS" -> showPricingCategory();
-            case "5", "PAYMENTS", "INVOICES" -> showPaymentsAndInvoicesCategory();
+            case "4", "PAYMENTS", "INVOICES" -> showPaymentsAndInvoicesCategory();
             case "HELP" -> showHelp();
             case "QUIT" -> System.exit(0);
             default -> System.out.println("Unknown command, try again or use HELP");
@@ -111,7 +109,6 @@ public class CLI {
         String command = scanner.nextLine();
         String[] parts = command.split("\\s+");
 
-        //companyName ze spacja w " "
         if (parts.length < 5) {
             System.out.println("Invalid command length");
             return;
@@ -134,11 +131,6 @@ public class CLI {
     }
 
     private void listAllUsers() {
-//        System.out.println("LIST_USERS");
-//        if (!(scanner.nextLine().equals("LIST_USERS"))) {
-//            System.out.println("Invalid command");
-//            return;
-//        }
         getUserRepository().getUsers().forEach(System.out::println);
     }
 
@@ -163,8 +155,6 @@ public class CLI {
             case "7" -> listAllDevices();
         }
     }
-
-//     <customHourlyRate>
 
     private void addRoom() {
         System.out.println("ADD_ROOM <name> <seats>");
@@ -331,11 +321,6 @@ public class CLI {
     }
 
     private void listAllDevices() {
-//        System.out.println("LIST_RESOURCES");
-//        if (!(scanner.nextLine().equals("LIST_RESOURCES"))) {
-//            System.out.println("Invalid command");
-//            return;
-//        }
         getResourceRepository().getResources().forEach(System.out::println);
     }
 
@@ -465,19 +450,7 @@ public class CLI {
     }
 
     private void listAllBookings() {
-//        System.out.println("LIST_BOOKINGS");
-//        if (!(scanner.nextLine().equals("LIST_BOOKINGS"))) {
-//            System.out.println("Invalid command");
-//            return;
-//        }
         getBookingRepository().getBookings().forEach(System.out::println);
-    }
-
-    private void showPricingCategory() {
-        System.out.println("""
-                What command do you want to use?
-                1 - set pricing policy
-                """);
     }
 
     private void showPaymentsAndInvoicesCategory() {
@@ -573,8 +546,6 @@ public class CLI {
                 4 - cancel a booking
                 5 - list all bookings
                 
-                PRICINGS
-                1 - set pricing policy
                 
                 PAYMENTS / INVOICES
                 1 - pay for a booking

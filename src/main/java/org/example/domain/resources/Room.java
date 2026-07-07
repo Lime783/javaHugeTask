@@ -41,39 +41,6 @@ public class Room extends Resource {
         this(name, null, seats, Set.of());
     }
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Money getCustomHourlyRate() {
-        return customHourlyRate;
-    }
-
-    public void setCustomHourlyRate(Money customHourlyRate) {
-        this.customHourlyRate = customHourlyRate;
-    }
-
-    public int getSeats() {
-        return seats;
-    }
-
-    public void setSeats(int seats) {
-        this.seats = seats;
-    }
-
-    public Set<String> getEquipment() {
-        return equipment;
-    }
-
-    public void setEquipment(Set<String> equipment) {
-        this.equipment = equipment;
-    }
-
     @Override
     protected Money baseRatePerHour() {
         return new Money(new BigDecimal("60.00"));

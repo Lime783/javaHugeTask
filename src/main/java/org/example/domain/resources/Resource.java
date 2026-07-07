@@ -13,18 +13,6 @@ public abstract class Resource {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Money getCustomHourlyRate() {
-        return customHourlyRate;
-    }
-
-    public void setCustomHourlyRate(Money customHourlyRate) {
-        this.customHourlyRate = customHourlyRate;
-    }
-
     protected abstract Money baseRatePerHour();
 
     public abstract String describe();
