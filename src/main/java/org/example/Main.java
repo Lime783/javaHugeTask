@@ -50,7 +50,7 @@ public class Main {
         var inMemoryResourceRepository = new InMemoryResourceRepository();
         var inMemoryUserRepository = new InMemoryUserRepository();
 
-        CLI cli = new CLI(inMemoryBookingRepository, inMemoryResourceRepository, inMemoryUserRepository);
+        new CLI(inMemoryBookingRepository, inMemoryResourceRepository, inMemoryUserRepository);
 //        ADD_USER INDIVIDUAL siemaeniu@wp.pl Jan Kowalski  (1, 1)
 //        ADD_ROOM kuchnia 5 200    (2, 2)
 //        BOOK siemaeniu@wp.pl kuchnia 2026-07-07T16:30 2026-07-07T18:30    (3, 1)

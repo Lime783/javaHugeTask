@@ -31,30 +31,6 @@ public class Device extends Resource {
         this(name, null, maxQuantity);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Money getCustomHourlyRate() {
-        return customHourlyRate;
-    }
-
-    public void setCustomHourlyRate(Money customHourlyRate) {
-        this.customHourlyRate = customHourlyRate;
-    }
-
-    public int getMaxQuantity() {
-        return maxQuantity;
-    }
-
-    public void setMaxQuantity(int maxQuantity) {
-        this.maxQuantity = maxQuantity;
-    }
-
     public int getRemainingQuantity() {
         return remainingQuantity;
     }

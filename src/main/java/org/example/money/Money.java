@@ -56,10 +56,6 @@ public record Money(BigDecimal amount) {
         return multiply(new Money(multiplier));
     }
 
-    public Money multiply(String multiplier) {
-       return multiply(new BigDecimal(multiplier));
-    }
-
     public Money divide(Money divisor) {
         Objects.requireNonNull(divisor, "divider must not be null");
         if (divisor.amount.compareTo(BigDecimal.ZERO) < 0) {

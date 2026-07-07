@@ -1,6 +1,5 @@
 package org.example.domain.payments;
 
-import org.example.domain.bookings.Booking;
 import org.example.domain.users.User;
 import org.example.money.Money;
 
@@ -30,7 +29,7 @@ public class Invoice {
         if (invoiceDate.isAfter(LocalDateTime.now())) {
             throw new IllegalArgumentException("invoiceDate cannot be in the future: " + invoiceDate);
         }
-        if (itemDescription.length() < 5){
+        if (itemDescription.length() < 5) {
             throw new IllegalArgumentException("item description is too short: " + itemDescription);
         }
 
@@ -57,46 +56,6 @@ public class Invoice {
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Invalid date format in invoice id: " + datePart);
         }
-    }
-
-    public String getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(String invoiceId) {
-        this.invoiceId = invoiceId;
-    }
-
-    public LocalDateTime getInvoiceDate() {
-        return invoiceDate;
-    }
-
-    public void setInvoiceDate(LocalDateTime invoiceDate) {
-        this.invoiceDate = invoiceDate;
-    }
-
-    public User getBuyer() {
-        return buyer;
-    }
-
-    public void setBuyer(User buyer) {
-        this.buyer = buyer;
-    }
-
-    public Money getTotal() {
-        return total;
-    }
-
-    public void setTotal(Money total) {
-        this.total = total;
-    }
-
-    public String getItemDescription() {
-        return itemDescription;
-    }
-
-    public void setItemDescription(String itemDescription) {
-        this.itemDescription = itemDescription;
     }
 
     @Override
