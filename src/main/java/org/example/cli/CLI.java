@@ -1,10 +1,7 @@
 package org.example.cli;
 
 import org.example.domain.bookings.Booking;
-import org.example.domain.resources.Desk;
-import org.example.domain.resources.DeskType;
-import org.example.domain.resources.Resource;
-import org.example.domain.resources.Room;
+import org.example.domain.resources.*;
 import org.example.domain.users.CompanyUser;
 import org.example.domain.users.IndividualUser;
 import org.example.domain.users.User;
@@ -289,7 +286,7 @@ public class CLI {
 
         int quantity = Integer.parseInt(parts[parts.length - 1]);
 
-        getResourceRepository().addResource(new Room(name, quantity));
+        getResourceRepository().addResource(new Device(name, quantity));
         System.out.println("Successfully added " + name + " (max " + quantity + ")");
     }
 
@@ -316,7 +313,7 @@ public class CLI {
         int quantity = Integer.parseInt(parts[parts.length - 2]);
         Money customHourlyRate = Money.of(parts[parts.length - 1]);
 
-        getResourceRepository().addResource(new Room(name, customHourlyRate, quantity));
+        getResourceRepository().addResource(new Device(name, customHourlyRate, quantity));
         System.out.println("Successfully added " + name + " (max " + quantity + ") which costs " + customHourlyRate + " per hour");
     }
 

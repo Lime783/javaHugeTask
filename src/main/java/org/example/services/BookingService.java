@@ -21,6 +21,7 @@ import java.util.Objects;
 
 public class BookingService {
     private static int counter = 0;
+
     public Booking book(User user, Resource resource, LocalDateTime startTime, LocalDateTime endTime, Payment paymentMethod, InMemoryBookingRepository inMemoryBookingRepository) {
         Objects.requireNonNull(user, "User must not be null");
         Objects.requireNonNull(resource, "Resource must not be null");
@@ -43,6 +44,15 @@ public class BookingService {
     }
 
     private void checkIfBookingIsValid(Booking bookingToCheck, InMemoryBookingRepository inMemoryBookingRepository) {
+        if (!(bookingToCheck.getStartTime().toLocalDate().equals(bookingToCheck.getEndTime().toLocalDate()))) {
+            throw new IllegalArgumentException("One booking for one day, start: " + bookingToCheck.getStartTime() + " end: " + bookingToCheck.getEndTime());
+        }
+
+        if (bookingToCheck.getStartTime().toLocalTime().isBefore(LocalTime.of(8, 0)) ||
+                bookingToCheck.getEndTime().toLocalTime().isAfter(LocalTime.of(20, 0))) {
+            throw new IllegalArgumentException("Cannot make a booking starting before 8:00 or ending after 20:00");
+        }
+
         for (Booking bookingInDataBase : inMemoryBookingRepository.getBookings()) {
             boolean bookingForResourceAlreadyExists = bookingToCheck.getResource().getName().equals(bookingInDataBase.getResource().getName());
             if (bookingForResourceAlreadyExists) {
@@ -111,7 +121,7 @@ public class BookingService {
         if (!(bookingStatus.equals(BookingStatus.PENDING) || bookingStatus.equals(BookingStatus.CONFIRMED))) {
             throw new IllegalStateException("booking: " + bookingToCancel.getId() + " cannot be cancelled, must be pending or confirmed");
         }
-        if (bookingToCancel.getResource() instanceof Device device){
+        if (bookingToCancel.getResource() instanceof Device device) {
             device.setRemainingQuantity(device.getRemainingQuantity() + 1);
         }
         bookingToCancel.setBookingStatus(BookingStatus.CANCELLED);
@@ -121,13 +131,12 @@ public class BookingService {
         if (!(bookingToComplete.getBookingStatus().equals(BookingStatus.CONFIRMED))) {
             throw new IllegalStateException("booking: " + bookingToComplete.getId() + " cannot be completed, must be confirmed");
         }
-        if (bookingToComplete.getResource() instanceof Device device){
+        if (bookingToComplete.getResource() instanceof Device device) {
             device.setRemainingQuantity(device.getRemainingQuantity() + 1);
         }
         bookingToComplete.setBookingStatus(BookingStatus.COMPLETED);
     }
 
-    //TODO: dodac filtry
     public List<Booking> getBookings(InMemoryBookingRepository inMemoryBookingRepository) {
         return inMemoryBookingRepository.getBookings();
     }

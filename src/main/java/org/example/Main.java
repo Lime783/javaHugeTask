@@ -42,6 +42,11 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
+        // Uzywam LocalDateTime bo potzrebuje zarowno daty jak i godziny.
+        // Zakładam, że firma działa w Polsce i nie będzie otwarta między 2 a 3
+        // więc nie potrzebuje obsługi zmiany czasu z zimowego na letni i na odwrót
+
 //        testNegativeBalance();
 //        testRoomConstructors();
 //        testCardPayments();
