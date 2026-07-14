@@ -5,7 +5,6 @@ import org.example.cli.CLI;
 import org.example.domain.payments.CardPayment;
 import org.example.domain.resources.Resource;
 import org.example.domain.resources.Room;
-import org.example.domain.users.IndividualUser;
 import org.example.money.Money;
 import org.example.repositories.InMemoryBookingRepository;
 import org.example.repositories.InMemoryResourceRepository;
@@ -59,7 +58,7 @@ public class Main {
 //        ADD_USER_INDIVIDUAL siemaeniu@wp.pl Jan Kowalski  (1, 1)
 //        ADD_ROOM kuchnia 5 200    (2, 2)
 //        BOOK siemaeniu@wp.pl kuchnia 2026-07-07T16:30 2026-07-07T18:30    (3, 1)
-//        PAY BK-20260707-0 CARD 1234   (5, 1)
-//        INVOICE BK-20260707-0    (5, 2)
+//        PAY BK-20260707-0 CARD 1234   (4, 1)
+//        INVOICE BK-20260707-0    (4, 2)
     }
 }

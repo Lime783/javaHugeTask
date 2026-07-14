@@ -2,12 +2,10 @@ package org.example.domain.resources;
 
 import org.example.money.Money;
 
-import java.util.HashSet;
 
 public abstract class Resource {
     protected String name;
     protected Money customHourlyRate;
-    final static protected HashSet<String> NAMES_UNIQUE = new HashSet<>();
 
     public String getName() {
         return name;

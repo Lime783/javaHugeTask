@@ -7,16 +7,13 @@ import java.util.Objects;
 
 public class Desk extends Resource {
 
-    private DeskType deskType;
+    private final DeskType deskType;
 
     public Desk(String name, Money customHourlyRate, DeskType deskType) {
         Objects.requireNonNull(name, "name cannot be null");
         Objects.requireNonNull(deskType, "deskType cannot be null");
         if (name.length() < 3 || name.length() > 100) {
             throw new IllegalArgumentException("Invalid desk name: " + name);
-        }
-        if (NAMES_UNIQUE.contains(name)) {
-            throw new IllegalArgumentException("Desk name already exists: " + name);
         }
         this.name = name;
         this.customHourlyRate = customHourlyRate;

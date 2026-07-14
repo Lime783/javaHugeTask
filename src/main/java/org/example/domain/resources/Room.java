@@ -19,14 +19,10 @@ public class Room extends Resource {
         if (seats < 0) {
             throw new IllegalArgumentException("Number of seats cannot be negative: " + seats);
         }
-        if (NAMES_UNIQUE.contains(name)) {
-            throw new IllegalArgumentException("Room name already exists: " + name);
-        }
         this.name = name;
         this.customHourlyRate = customHourlyRate;
         this.seats = seats;
         this.equipment = equipment;
-        NAMES_UNIQUE.add(name);
     }
 
     public Room(String name, int seats, Set<String> equipment) {
