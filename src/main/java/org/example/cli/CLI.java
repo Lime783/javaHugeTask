@@ -19,9 +19,15 @@ import java.util.Scanner;
 
 public class CLI {
     Scanner scanner = new Scanner(System.in);
+
     private final InMemoryBookingRepository bookingRepository;
     private final InMemoryResourceRepository resourceRepository;
     private final InMemoryUserRepository userRepository;
+
+    private final BookingService bookingService;
+    private final PaymentService paymentService;
+    private final BillingService billingService;
+
 
     public CLI(InMemoryBookingRepository inMemoryBookingRepository, InMemoryResourceRepository inMemoryResourceRepository, InMemoryUserRepository inMemoryUserRepository) {
         Objects.requireNonNull(inMemoryBookingRepository, "inMemoryBookingRepository must not be null");
@@ -31,6 +37,9 @@ public class CLI {
         this.bookingRepository = inMemoryBookingRepository;
         this.resourceRepository = inMemoryResourceRepository;
         this.userRepository = inMemoryUserRepository;
+        this.bookingService = new BookingService(getBookingRepository());
+        this.paymentService = new PaymentService(getBookingRepository());
+        this.billingService = new BillingService();
 
         while (true) {
             chooseWhatToDo();
@@ -77,51 +86,20 @@ public class CLI {
     }
 
     private void addIndividualUser() {
-        System.out.println("ADD_USER INDIVIDUAL <email> <displayName>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
+        String[] parts = processCommand("ADD_USER_INDIVIDUAL <email> <displayName>", false);
 
-        if (parts.length < 4) {
-            System.out.println("Invalid command length");
-            return;
-        }
+        String email = parts[1];
 
-        if (!(parts[0].equals("ADD_USER") || parts[1].equals("INDIVIDUAL"))) {
-            System.out.println("Invalid command");
-            return;
-        }
-
-        String email = parts[2];
-
-        String displayName = "";
-        for (int i = 3; i <= parts.length - 1; i++) {
-            displayName += parts[i] + " ";
-        }
+        String displayName = createName(parts, 2, parts.length - 1);
         getUserRepository().addUser(new IndividualUser(email, displayName));
         System.out.println("Successfully added " + displayName + ", " + email);
     }
 
     private void addCompanyUser() {
-        System.out.println("ADD_USER COMPANY <email> <companyName> <taxID>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
+        String[] parts = processCommand("ADD_USER_COMPANY <email> <companyName> <taxID>", false);
 
-        if (parts.length < 5) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("ADD_USER") || parts[1].equals("COMPANY"))) {
-            System.out.println("Invalid command");
-            return;
-        }
-
-        String email = parts[2];
-
-        String companyName = "";
-        for (int i = 3; i <= parts.length - 2; i++) {
-            companyName += parts[i] + " ";
-        }
+        String email = parts[1];
+        String companyName = createName(parts, 2, parts.length - 2);
         String taxID = parts[parts.length - 1];
         getUserRepository().addUser(new CompanyUser(email, companyName, taxID));
         System.out.println("Successfully added " + companyName + ", " + email);
@@ -154,25 +132,9 @@ public class CLI {
     }
 
     private void addRoom() {
-        System.out.println("ADD_ROOM <name> <seats>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
+        String[] parts = processCommand("ADD_ROOM <name> <seats>", false);
 
-        if (parts.length < 3) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("ADD_ROOM"))) {
-            System.out.println("Invalid command");
-            return;
-        }
-
-        String name = "";
-        for (int i = 1; i <= parts.length - 2; i++) {
-            name += parts[i] + " ";
-        }
-
+        String name = createName(parts, 1, parts.length - 2);
         int seats = Integer.parseInt(parts[parts.length - 1]);
 
         getResourceRepository().addResource(new Room(name, seats));
@@ -180,25 +142,9 @@ public class CLI {
     }
 
     private void addRoomWithCustomHourlyRate() {
-        System.out.println("ADD_ROOM <name> <seats> <customHourlyRate>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
+        String[] parts = processCommand("ADD_ROOM <name> <seats> <customHourlyRate>", false);
 
-        if (parts.length < 4) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("ADD_ROOM"))) {
-            System.out.println("Invalid command");
-            return;
-        }
-
-        String name = "";
-        for (int i = 1; i <= parts.length - 3; i++) {
-            name += parts[i] + " ";
-        }
-
+        String name = createName(parts, 1, parts.length - 3);
         int seats = Integer.parseInt(parts[parts.length - 2]);
         Money customHourlyRate = Money.of(parts[parts.length - 1]);
 
@@ -207,25 +153,14 @@ public class CLI {
     }
 
     private void addDesk() {
-        System.out.println("ADD_DESK <name> <small|regular>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
+        String[] parts = processCommand("ADD_DESK <name> <small|regular>", false);
 
-        if (parts.length < 3) {
-            System.out.println("Invalid command length");
+        if (!(parts[parts.length - 2].equals("small") || parts[parts.length - 2].equals("regular"))) {
+            System.out.println("Invalid desk type");
             return;
         }
 
-        if (!(parts[0].equals("ADD_DESK"))) {
-            System.out.println("Invalid command");
-            return;
-        }
-
-        String name = "";
-        for (int i = 1; i <= parts.length - 2; i++) {
-            name += parts[i] + " ";
-        }
-
+        String name = createName(parts, 1, parts.length - 2);
         DeskType deskType = DeskType.valueOf(parts[parts.length - 1].toUpperCase());
 
         getResourceRepository().addResource(new Desk(name, deskType));
@@ -233,30 +168,14 @@ public class CLI {
     }
 
     private void addDeskWithCustomHourlyRate() {
-        System.out.println("ADD_DESK <name> <small|regular> <customHourlyRate>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
-
-        if (parts.length < 4) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("ADD_DESK"))) {
-            System.out.println("Invalid command");
-            return;
-        }
+        String[] parts = processCommand("ADD_DESK <name> <small|regular> <customHourlyRate>", false);
 
         if (!(parts[parts.length - 2].equals("small") || parts[parts.length - 2].equals("regular"))) {
             System.out.println("Invalid desk type");
             return;
         }
 
-        String name = "";
-        for (int i = 1; i <= parts.length - 3; i++) {
-            name += parts[i] + " ";
-        }
-
+        String name = createName(parts, 1, parts.length - 3);
         DeskType deskType = DeskType.valueOf(parts[parts.length - 2].toUpperCase());
         Money customHourlyRate = Money.of(parts[parts.length - 1]);
 
@@ -265,25 +184,9 @@ public class CLI {
     }
 
     private void addDevice() {
-        System.out.println("ADD_DEVICE <name> <quantity>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
+        String[] parts = processCommand("ADD_DEVICE <name> <quantity>", false);
 
-        if (parts.length < 3) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("ADD_DEVICE"))) {
-            System.out.println("Invalid command");
-            return;
-        }
-
-        String name = "";
-        for (int i = 1; i <= parts.length - 2; i++) {
-            name += parts[i] + " ";
-        }
-
+        String name = createName(parts, 1, parts.length - 2);
         int quantity = Integer.parseInt(parts[parts.length - 1]);
 
         getResourceRepository().addResource(new Device(name, quantity));
@@ -291,25 +194,9 @@ public class CLI {
     }
 
     private void addDeviceWithCustomHourlyRate() {
-        System.out.println("ADD_DEVICE <name> <quantity> <customHourlyRate>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
+        String[] parts = processCommand("ADD_DEVICE <name> <quantity> <customHourlyRate>", false);
 
-        if (parts.length < 4) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("ADD_DEVICE"))) {
-            System.out.println("Invalid command");
-            return;
-        }
-
-        String name = "";
-        for (int i = 1; i <= parts.length - 3; i++) {
-            name += parts[i] + " ";
-        }
-
+        String name = createName(parts, 1, parts.length - 3);
         int quantity = Integer.parseInt(parts[parts.length - 2]);
         Money customHourlyRate = Money.of(parts[parts.length - 1]);
 
@@ -340,108 +227,51 @@ public class CLI {
     }
 
     private void bookResourceFromTo() {
-        System.out.println("BOOK <userEmail> <resourceName> <startIso> <endIso> (format YYYY-MM-DDTHH:MM)");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
-
-        if (parts.length < 5) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("BOOK"))) {
-            System.out.println("Invalid command");
-            return;
-        }
+        System.out.println("(Iso format is YYYY-MM-DDTHH:MM)");
+        String[] parts = processCommand("BOOK <userEmail> <resourceName> <startIso> <endIso>", false);
 
         String userEmail = parts[1];
-        String resourceName = "";
-        for (int i = 2; i <= parts.length - 3; i++) {
-            resourceName += parts[i] + " ";
-        }
+        String resourceName = createName(parts, 2, parts.length - 3);
         LocalDateTime start = LocalDateTime.parse(parts[parts.length - 2]);
         LocalDateTime end = LocalDateTime.parse(parts[parts.length - 1]);
         User user = getUserRepository().findUserByEmail(userEmail);
         Resource resource = getResourceRepository().findResourceByName(resourceName);
 
-        BookingService bookingService = new BookingService();
-        bookingService.book(user, resource, start, end, getBookingRepository());
+        bookingService.book(user, resource, start, end);
         System.out.println("Successfully booked " + resourceName + " to " + userEmail + " from " + start + " to " + end);
     }
 
     private void bookResourceFromFor() {
-        System.out.println("BOOK <userEmail> <resourceName> <startIso> (format YYYY-MM-DDTHH:MM) <durationMinutes>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
-
-        if (parts.length < 5) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("BOOK"))) {
-            System.out.println("Invalid command");
-            return;
-        }
+        System.out.println("(Iso format is YYYY-MM-DDTHH:MM)");
+        String[] parts = processCommand("BOOK <userEmail> <resourceName> <startIso> <durationMinutes>", false);
 
         String userEmail = parts[1];
-        String resourceName = "";
-        for (int i = 2; i <= parts.length - 3; i++) {
-            resourceName += parts[i] + " ";
-        }
-
+        String resourceName = createName(parts, 2, parts.length - 3);
         LocalDateTime start = LocalDateTime.parse(parts[parts.length - 2]);
         LocalDateTime end = start.plusMinutes(Integer.parseInt(parts[parts.length - 1]));
         User user = getUserRepository().findUserByEmail(userEmail);
         Resource resource = getResourceRepository().findResourceByName(resourceName);
 
-        BookingService bookingService = new BookingService();
-        bookingService.book(user, resource, start, end, getBookingRepository());
+        bookingService.book(user, resource, start, end);
         System.out.println("Successfully booked " + resourceName + " to " + userEmail + " from " + start + " to " + end);
     }
 
     private void confirmBooking() {
-        System.out.println("CONFIRM <bookingId>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
-
-        if (parts.length != 2) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("CONFIRM"))) {
-            System.out.println("Invalid command");
-            return;
-        }
+        String[] parts = processCommand("CONFIRM <bookingId>", true);
 
         String bookingId = parts[1];
         Booking bookingToConfirm = getBookingRepository().findBookingByID(bookingId);
 
-        BookingService bookingService = new BookingService();
         bookingService.confirmBooking(bookingToConfirm);
         System.out.println("Successfully confirmed booking " + bookingToConfirm.getId());
     }
 
     private void cancelBooking() {
-        System.out.println("CANCEL <bookingId>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
-
-        if (parts.length != 2) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("CANCEL"))) {
-            System.out.println("Invalid command");
-            return;
-        }
+        String[] parts = processCommand("CANCEL <bookingId>", true);
 
         String bookingId = parts[1];
         Booking bookingToConfirm = getBookingRepository().findBookingByID(bookingId);
 
-        BookingService bookingService = new BookingService();
         bookingService.cancelBooking(bookingToConfirm);
         System.out.println("Successfully canceled booking " + bookingToConfirm.getId());
     }
@@ -463,47 +293,25 @@ public class CLI {
     }
 
     private void payForBooking() {
-        System.out.println("PAY <bookingId> CARD <last4>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
+        String[] parts = processCommand("PAY <bookingId> CARD <last4>", true);
 
-        if (parts.length != 4) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("PAY") || parts[2].equals("CARD"))) {
-            System.out.println("Invalid command");
-            return;
+        if (!(Objects.equals(parts[2], "CARD"))) {
+            throw new IllegalArgumentException("Invalid command");
         }
 
         String bookingId = parts[1];
         String last4 = parts[3];
 
-        PaymentService paymentService = new PaymentService();
-        paymentService.pay(bookingId, last4, getBookingRepository());
+        paymentService.pay(bookingId, last4);
         System.out.println("Successfully paid for booking " + bookingId + " using card with 4 last digits: " + last4);
     }
 
     private void createInvoice() {
-        System.out.println("INVOICE <bookingId>");
-        String command = scanner.nextLine();
-        String[] parts = command.split("\\s+");
-
-        if (parts.length != 2) {
-            System.out.println("Invalid command length");
-            return;
-        }
-
-        if (!(parts[0].equals("INVOICE"))) {
-            System.out.println("Invalid command");
-            return;
-        }
+        String[] parts = processCommand("INVOICE <bookingId>", true);
 
         String bookingId = parts[1];
         Booking bookingToInvoice = getBookingRepository().findBookingByID(bookingId);
 
-        BillingService billingService = new BillingService();
         billingService.toInvoice(bookingToInvoice);
         System.out.println("Successfully created invoice for booking " + bookingToInvoice.getId());
     }
@@ -550,6 +358,45 @@ public class CLI {
                 
                 ==============================================
                 """);
+    }
+
+    private String[] processCommand(String commandToShow, boolean fixedLength) {
+        int partsRequired = commandToShow.split("\\s+").length;
+
+        System.out.println(commandToShow);
+        String userCommand = scanner.nextLine();
+        String[] parts = userCommand.split("\\s+");
+
+        validateCommandLength(partsRequired, parts, fixedLength);
+        validateFirstCommand(commandToShow, parts);
+
+        return parts;
+    }
+
+    private void validateCommandLength(int partsRequired, String[] parts, boolean fixedLength) {
+        if (fixedLength) {
+            if (parts.length != partsRequired) {
+                throw new IllegalArgumentException("Invalid command length");
+            }
+        } else {
+            if (parts.length < partsRequired) {
+                throw new IllegalArgumentException("Invalid command length");
+            }
+        }
+    }
+
+    private void validateFirstCommand(String commandToShow, String[] parts) {
+        if (!(parts[0].equals(commandToShow.split("\\s+")[0]))) {
+            throw new IllegalArgumentException("Invalid command");
+        }
+    }
+
+    private String createName(String[] parts, int from, int to) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = from; i <= to; i++) {
+            stringBuilder.append(parts[i]).append(" ");
+        }
+        return stringBuilder.toString();
     }
 
     public InMemoryBookingRepository getBookingRepository() {

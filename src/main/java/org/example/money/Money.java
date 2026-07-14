@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
-public record Money(BigDecimal amount) {
+public record Money(BigDecimal amount) implements Comparable<Money> {
     public Money(BigDecimal amount) {
         Objects.requireNonNull(amount, "amount must not be null");
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
@@ -72,7 +72,7 @@ public record Money(BigDecimal amount) {
         return divide(new BigDecimal(divisor));
     }
 
-    int compareTo(Money moneyToCompare) {
+    public int compareTo(Money moneyToCompare) {
         return amount.compareTo(moneyToCompare.amount);
     }
 

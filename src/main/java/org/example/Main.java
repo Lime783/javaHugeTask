@@ -51,12 +51,12 @@ public class Main {
 //        testRoomConstructors();
 //        testCardPayments();
 
-        var inMemoryBookingRepository = new InMemoryBookingRepository();
-        var inMemoryResourceRepository = new InMemoryResourceRepository();
-        var inMemoryUserRepository = new InMemoryUserRepository();
+        InMemoryBookingRepository inMemoryBookingRepository = new InMemoryBookingRepository();
+        InMemoryResourceRepository inMemoryResourceRepository = new InMemoryResourceRepository();
+        InMemoryUserRepository inMemoryUserRepository = new InMemoryUserRepository();
 
         new CLI(inMemoryBookingRepository, inMemoryResourceRepository, inMemoryUserRepository);
-//        ADD_USER INDIVIDUAL siemaeniu@wp.pl Jan Kowalski  (1, 1)
+//        ADD_USER_INDIVIDUAL siemaeniu@wp.pl Jan Kowalski  (1, 1)
 //        ADD_ROOM kuchnia 5 200    (2, 2)
 //        BOOK siemaeniu@wp.pl kuchnia 2026-07-07T16:30 2026-07-07T18:30    (3, 1)
 //        PAY BK-20260707-0 CARD 1234   (5, 1)

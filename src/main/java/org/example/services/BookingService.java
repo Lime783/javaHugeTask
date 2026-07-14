@@ -21,8 +21,13 @@ import java.util.Objects;
 
 public class BookingService {
     private static int counter = 0;
+    private final InMemoryBookingRepository inMemoryBookingRepository;
 
-    public Booking book(User user, Resource resource, LocalDateTime startTime, LocalDateTime endTime, Payment paymentMethod, InMemoryBookingRepository inMemoryBookingRepository) {
+    public BookingService(InMemoryBookingRepository inMemoryBookingRepository){
+        this.inMemoryBookingRepository = inMemoryBookingRepository;
+    }
+
+    public Booking book(User user, Resource resource, LocalDateTime startTime, LocalDateTime endTime, Payment paymentMethod) {
         Objects.requireNonNull(user, "User must not be null");
         Objects.requireNonNull(resource, "Resource must not be null");
         Objects.requireNonNull(startTime, "Start date must not be null");
@@ -95,46 +100,20 @@ public class BookingService {
         }
     }
 
-    public Booking book(User user, Resource resource, LocalDateTime startTime, LocalDateTime endTime, InMemoryBookingRepository inMemoryBookingRepository) {
-        return book(user, resource, startTime, endTime, null, inMemoryBookingRepository);
-    }
-
-    public Booking book(User user, Resource resource, LocalDateTime startTime, int durationInMinutes, Payment paymentMethod, InMemoryBookingRepository inMemoryBookingRepository) {
-        LocalDateTime endTime = startTime.plusMinutes(durationInMinutes);
-        return book(user, resource, startTime, endTime, paymentMethod, inMemoryBookingRepository);
-    }
-
-    public Booking book(User user, Resource resource, LocalDateTime startTime, int durationInMinutes, InMemoryBookingRepository inMemoryBookingRepository) {
-        LocalDateTime endTime = startTime.plusMinutes(durationInMinutes);
-        return book(user, resource, startTime, endTime, null, inMemoryBookingRepository);
+    public Booking book(User user, Resource resource, LocalDateTime startTime, LocalDateTime endTime) {
+        return book(user, resource, startTime, endTime, null);
     }
 
     public void confirmBooking(Booking bookingToConfirm) {
-        if (!(bookingToConfirm.getBookingStatus().equals(BookingStatus.PENDING))) {
-            throw new IllegalStateException("booking: " + bookingToConfirm.getId() + " cannot be confirmed, must be pending");
-        }
-        bookingToConfirm.setBookingStatus(BookingStatus.CONFIRMED);
+        bookingToConfirm.confirmBooking();
     }
 
     public void cancelBooking(Booking bookingToCancel) {
-        BookingStatus bookingStatus = bookingToCancel.getBookingStatus();
-        if (!(bookingStatus.equals(BookingStatus.PENDING) || bookingStatus.equals(BookingStatus.CONFIRMED))) {
-            throw new IllegalStateException("booking: " + bookingToCancel.getId() + " cannot be cancelled, must be pending or confirmed");
-        }
-        if (bookingToCancel.getResource() instanceof Device device) {
-            device.setRemainingQuantity(device.getRemainingQuantity() + 1);
-        }
-        bookingToCancel.setBookingStatus(BookingStatus.CANCELLED);
+        bookingToCancel.cancelBooking();
     }
 
     public void completeBooking(Booking bookingToComplete) {
-        if (!(bookingToComplete.getBookingStatus().equals(BookingStatus.CONFIRMED))) {
-            throw new IllegalStateException("booking: " + bookingToComplete.getId() + " cannot be completed, must be confirmed");
-        }
-        if (bookingToComplete.getResource() instanceof Device device) {
-            device.setRemainingQuantity(device.getRemainingQuantity() + 1);
-        }
-        bookingToComplete.setBookingStatus(BookingStatus.COMPLETED);
+        bookingToComplete.completeBooking();
     }
 
     public List<Booking> getBookings(InMemoryBookingRepository inMemoryBookingRepository) {

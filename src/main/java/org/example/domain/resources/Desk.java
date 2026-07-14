@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class Desk extends Resource {
 
-    DeskType deskType;
+    private DeskType deskType;
 
     public Desk(String name, Money customHourlyRate, DeskType deskType) {
         Objects.requireNonNull(name, "name cannot be null");

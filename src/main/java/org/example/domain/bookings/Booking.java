@@ -1,6 +1,7 @@
 package org.example.domain.bookings;
 
 import org.example.domain.payments.Payment;
+import org.example.domain.resources.Device;
 import org.example.domain.resources.Resource;
 import org.example.domain.users.User;
 import org.example.money.Money;
@@ -32,7 +33,7 @@ public class Booking {
         Objects.requireNonNull(endTime, "endTime cannot be null");
 
         isValidBookingId(id);
-        if (startTime.isAfter(endTime)) {
+        if (!(startTime.isBefore(endTime))) {
             throw new IllegalStateException("start time: " + startTime + " cannot be after end time: " + endTime);
         }
 
@@ -69,6 +70,33 @@ public class Booking {
 
     public long durationInMinutes() {
         return Duration.between(startTime, endTime).toMinutes();
+    }
+
+    public void confirmBooking() {
+        if (!(getBookingStatus().equals(BookingStatus.PENDING))) {
+            throw new IllegalStateException("booking: " + getId() + " cannot be confirmed, must be pending");
+        }
+        setBookingStatus(BookingStatus.CONFIRMED);
+    }
+
+    public void cancelBooking() {
+        if (!(getBookingStatus().equals(BookingStatus.PENDING) || getBookingStatus().equals(BookingStatus.CONFIRMED))) {
+            throw new IllegalStateException("booking: " + getId() + " cannot be cancelled, must be pending or confirmed");
+        }
+        if (getResource() instanceof Device device) {
+            device.setRemainingQuantity(device.getRemainingQuantity() + 1);
+        }
+        setBookingStatus(BookingStatus.CANCELLED);
+    }
+
+    public void completeBooking() {
+        if (!(getBookingStatus().equals(BookingStatus.CONFIRMED))) {
+            throw new IllegalStateException("booking: " + getId() + " cannot be completed, must be confirmed");
+        }
+        if (getResource() instanceof Device device) {
+            device.setRemainingQuantity(device.getRemainingQuantity() + 1);
+        }
+        setBookingStatus(BookingStatus.COMPLETED);
     }
 
     public String getId() {

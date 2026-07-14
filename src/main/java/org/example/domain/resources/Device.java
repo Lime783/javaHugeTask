@@ -7,8 +7,8 @@ import java.util.Objects;
 
 public class Device extends Resource {
 
-    int maxQuantity;
-    int remainingQuantity;
+    private int maxQuantity;
+    private int remainingQuantity;
 
     public Device(String name, Money customHourlyRate, int maxQuantity) {
         if (name.length() < 3 || name.length() > 100) {

@@ -13,7 +13,7 @@ public class StandardPricing implements PricingPolicy {
         BigDecimal durationOfBookingInMinutes = new BigDecimal(booking.durationInMinutes());
 
         return booking.getResource().hourlyRate()
-                .divide(MINUTES_IN_HOUR)
-                .multiply(durationOfBookingInMinutes);
+                .multiply(durationOfBookingInMinutes)
+                .divide(MINUTES_IN_HOUR);
     }
 }

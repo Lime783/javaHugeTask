@@ -14,8 +14,8 @@ public class HappyHoursPricing implements PricingPolicy {
         BigDecimal durationOfBookingInMinutes = new BigDecimal(booking.durationInMinutes());
 
         return booking.getResource().hourlyRate()
-                .divide(MINUTES_IN_HOUR)
                 .multiply(durationOfBookingInMinutes)
-                .multiply(BigDecimal.ONE.subtract(discountPercentage));
+                .multiply(BigDecimal.ONE.subtract(discountPercentage))
+                .divide(MINUTES_IN_HOUR);
     }
 }
