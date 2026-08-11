@@ -31,8 +31,9 @@ public class Main {
         System.out.println(room3.describe());
     }
 
-    public static void testCardPayments() {
+    public static void testCardPaymentsWhichFailAfterDoubleCapturing() {
         CardPayment cardPayment1 = new CardPayment(new Money("12.34"), "1234");
+
         System.out.println(cardPayment1);
         cardPayment1.capture();
         System.out.println(cardPayment1.getPaymentStatus());

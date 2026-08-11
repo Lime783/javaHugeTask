@@ -8,21 +8,33 @@ import java.util.Set;
 
 public class Room extends Resource {
 
+    public static final int MIN_DESC_LENGTH = 3;
+    public static final int MAX_DESC_LENGTH = 100;
     private int seats;
     private Set<String> equipment;
 
     public Room(String name, Money customHourlyRate, int seats, Set<String> equipment) {
         Objects.requireNonNull(name, "Room name cannot be null");
-        if (name.length() < 3 || name.length() > 100) {
-            throw new IllegalArgumentException("Invalid room name: " + name);
-        }
-        if (seats < 0) {
-            throw new IllegalArgumentException("Number of seats cannot be negative: " + seats);
-        }
+
+        isDescValid(name);
+        hasSeats(seats);
+
         this.name = name;
         this.customHourlyRate = customHourlyRate;
         this.seats = seats;
         this.equipment = equipment;
+    }
+
+    private static void isDescValid(String name) {
+        if (name.length() < MIN_DESC_LENGTH || name.length() > MAX_DESC_LENGTH) {
+            throw new IllegalArgumentException("Invalid room name: " + name);
+        }
+    }
+
+    private static void hasSeats(int seats) {
+        if (seats < 0) {
+            throw new IllegalArgumentException("Number of seats cannot be negative: " + seats);
+        }
     }
 
     public Room(String name, int seats, Set<String> equipment) {
