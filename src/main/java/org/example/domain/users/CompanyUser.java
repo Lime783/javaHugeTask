@@ -1,0 +1,33 @@
+package org.example.domain.users;
+
+import java.util.Objects;
+
+public class CompanyUser extends User {
+
+    private String companyName;
+    private String taxId;
+
+    public CompanyUser(String email, String displayName, String companyName, String taxId) {
+        super(email, displayName);
+        if (companyName.length() > 100 || companyName.length() < 3) {
+            throw new IllegalArgumentException("Invalid company name: " + companyName);
+        }
+        if (taxId.length() != 10) {
+            throw new IllegalArgumentException("Invalid tax id: " + taxId);
+        }
+        this.companyName = Objects.requireNonNull(companyName, "companyName cannot be null");
+        this.taxId = Objects.requireNonNull(taxId, "taxId cannot be null");
+    }
+
+    public CompanyUser(String email, String companyName, String taxId) {
+        this(email, "Anon", companyName, taxId);
+    }
+
+    @Override
+    public String toString() {
+        return "CompanyUser{" +
+                "companyName='" + companyName + '\'' +
+                ", taxId='" + taxId + '\'' +
+                '}';
+    }
+}
