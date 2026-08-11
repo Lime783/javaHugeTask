@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CardPayment extends Payment {
-    private String last4Digits;
+    private final String last4Digits;
     private static final Pattern FOUR_DIGITS = Pattern.compile("^\\d{4}$");
     private static final Pattern CODE_PATTERN = Pattern.compile("^PI-(\\d{8})-(\\d{1,3})$");
 

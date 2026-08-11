@@ -46,10 +46,6 @@ public class Main {
         // Zakładam, że firma działa w Polsce i nie będzie otwarta między 2 a 3
         // więc nie potrzebuje obsługi zmiany czasu z zimowego na letni i na odwrót
 
-//        testNegativeBalance();
-//        testRoomConstructors();
-//        testCardPayments();
-
         InMemoryBookingRepository inMemoryBookingRepository = new InMemoryBookingRepository();
         InMemoryResourceRepository inMemoryResourceRepository = new InMemoryResourceRepository();
         InMemoryUserRepository inMemoryUserRepository = new InMemoryUserRepository();

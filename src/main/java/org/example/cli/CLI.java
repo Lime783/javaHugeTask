@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class CLI {
-    Scanner scanner = new Scanner(System.in);
+    final Scanner scanner = new Scanner(System.in);
 
     private final InMemoryBookingRepository bookingRepository;
     private final InMemoryResourceRepository resourceRepository;

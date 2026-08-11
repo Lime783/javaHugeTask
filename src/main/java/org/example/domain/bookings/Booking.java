@@ -16,10 +16,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Booking {
-    private String id;
-    private User user;
-    private Resource resource;
-    private LocalDateTime startTime, endTime;
+    private final String id;
+    private final User user;
+    private final Resource resource;
+    private final LocalDateTime startTime, endTime;
     private BookingStatus bookingStatus;
     private Money calculatedPrice;
     private Payment payment;
@@ -109,10 +109,6 @@ public class Booking {
 
     public Resource getResource() {
         return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
     }
 
     public LocalDateTime getStartTime() {
